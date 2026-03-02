@@ -32,6 +32,19 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+        // --- NOUVEAU BLOC POUR L'AVATAR ---
+        if ($request->hasFile('avatar')) {
+            // Si l'utilisateur a déjà un avatar, on peut le supprimer de l'espace de stockage pour faire de la place (optionnel)
+            if ($request->user()->avatar) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($request->user()->avatar);
+            }
+            
+            // On sauvegarde la nouvelle image dans le dossier 'avatars'
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $request->user()->avatar = $path;
+        }
+        // ----------------------------------
+
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
