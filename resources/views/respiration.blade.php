@@ -1,10 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <a href="{{ route('dashboard') }}" class="text-gray-400 hover:text-gray-600">Tableau de bord</a>
-            <span class="mx-2">/</span>
-            {{ $exercise->name }}
-        </h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="text-gray-400 hover:text-gray-600 hover:underline">Tableau de bord</a>
+                @else
+                    <a href="{{ route('public.exercises') }}" class="text-gray-400 hover:text-gray-600 hover:underline">Exercices libres</a>
+                @endauth
+                <span class="mx-2">/</span>
+                {{ $exercise->name }}
+            </h2>
     </x-slot>
 
     <div class="py-12 flex flex-col items-center justify-center min-h-[80vh]" 

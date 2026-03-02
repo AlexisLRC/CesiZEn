@@ -18,14 +18,21 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Route PUBLIQUE (accessible sans compte)
+Route::get('/respiration/{id}', [CesiZenController::class, 'respiration'])->name('respiration.show');
+
+// Page publique pour voir les exercices
+Route::get('/exercices', [CesiZenController::class, 'publicExercises'])->name('public.exercises');
+
 // Routes protégées (Il faut être connecté)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // ---> AJOUTE CETTE LIGNE QUI MANQUE <---
-    Route::get('/respiration/{id}', [CesiZenController::class, 'respiration'])->name('respiration.show');
+    
+    // NOUVELLES ROUTES : Créer/Modifier son exercice perso
+    Route::get('/mon-exercice', [CesiZenController::class, 'editPersonal'])->name('personal.edit');
+    Route::post('/mon-exercice', [CesiZenController::class, 'storePersonal'])->name('personal.store');
 });
 
 // Groupe Admin : Seul l'utilisateur avec role='admin' peut entrer ici

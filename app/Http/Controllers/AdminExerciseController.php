@@ -10,9 +10,8 @@ class AdminExerciseController extends Controller
     // Affiche la liste des exercices (Back-Office)
     public function index()
     {
-        // On force l'affichage en triant par la colonne 'order' du plus petit au plus grand
-        $exercises = Exercise::orderBy('order', 'asc')->get();
-        
+        // On ne récupère QUE les exercices globaux (user_id est null)
+        $exercises = Exercise::whereNull('user_id')->orderBy('order', 'asc')->get();
         return view('admin.exercises.index', compact('exercises'));
     }
 

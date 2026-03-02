@@ -11,6 +11,7 @@ class Exercise extends Model
 
     // AJOUTE CE BLOC POUR AUTORISER LA MODIFICATION DES DONNÉES
     protected $fillable = [
+        'user_id',
         'name',
         'description',
         'order',

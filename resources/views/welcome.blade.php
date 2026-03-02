@@ -49,7 +49,7 @@
             </p>
 
             <div class="flex gap-6">
-                <a href="{{ route('register') }}" class="px-8 py-4 bg-cesi-green text-white text-lg font-bold rounded-xl shadow-xl hover:scale-105 transition transform">
+                <a href="{{ route('public.exercises') }}" class="px-8 py-4 bg-cesi-green text-white text-lg font-bold rounded-xl shadow-xl hover:scale-105 transition transform">
                     Commencer maintenant
                 </a>
                 <a href="#info" class="px-8 py-4 bg-white text-cesi-green border-2 border-cesi-green text-lg font-bold rounded-xl hover:bg-green-50 transition">
