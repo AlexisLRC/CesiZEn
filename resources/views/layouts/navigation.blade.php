@@ -4,8 +4,8 @@
             <div class="flex">
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-md">
-                            <img src="{{ asset('logo.png') }}" class="h-full w-full object-cover" alt="Logo" />
+                        <div class="bg-white rounded-lg flex items-center justify-center shadow-md p-1" style="width: 60px; height: 60px;">
+                            <img src="{{ asset('logo.png') }}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo CesiZen" />
                         </div>
                     </a>
                 </div>
