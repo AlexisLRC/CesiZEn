@@ -18,7 +18,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                @foreach(\App\Models\Exercise::all() as $exercise)
+                @foreach(\App\Models\Exercise::orderBy('order', 'asc')->get() as $exercise)
                 <div class="bg-white overflow-hidden shadow-lg rounded-xl hover:shadow-2xl transition duration-300 border-l-4 border-cesi-yellow">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-4">

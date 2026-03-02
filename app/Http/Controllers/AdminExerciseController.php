@@ -10,7 +10,9 @@ class AdminExerciseController extends Controller
     // Affiche la liste des exercices (Back-Office)
     public function index()
     {
-        $exercises = Exercise::all();
+        // On force l'affichage en triant par la colonne 'order' du plus petit au plus grand
+        $exercises = Exercise::orderBy('order', 'asc')->get();
+        
         return view('admin.exercises.index', compact('exercises'));
     }
 
@@ -61,5 +63,17 @@ class AdminExerciseController extends Controller
     {
         $exercise->delete();
         return redirect()->route('admin.exercises.index')->with('success', 'Exercice supprimé !');
+    }
+
+    // Sauvegarde le nouvel ordre après un drag & drop
+    public function reorder(Request $request)
+    {
+        $orderArray = $request->input('order'); // Reçoit un tableau d'IDs
+        
+        foreach ($orderArray as $index => $id) {
+            Exercise::where('id', $id)->update(['order' => $index + 1]);
+        }
+
+        return response()->json(['success' => true]);
     }
 }

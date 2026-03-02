@@ -34,6 +34,10 @@ Route::middleware(['auth', 'admin']) // <--- 'admin' est une string, donc plus d
     ->name('admin.')
     ->group(function () {
         
+        // Route cachée pour sauvegarder l'ordre via Glisser-Déposer
+        Route::post('exercises/reorder', [AdminExerciseController::class, 'reorder'])->name('exercises.reorder');
+        
+        // Ta route existante :
         Route::resource('exercises', AdminExerciseController::class);
 });
 require __DIR__.'/auth.php';
