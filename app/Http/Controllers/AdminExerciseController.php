@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Exercise;
+use Illuminate\Http\Request;
+
+class AdminExerciseController extends Controller
+{
+    // Affiche la liste des exercices (Back-Office)
+    public function index()
+    {
+        $exercises = Exercise::all();
+        return view('admin.exercises.index', compact('exercises'));
+    }
+
+    // Affiche le formulaire de création
+    public function create()
+    {
+        return view('admin.exercises.form');
+    }
+
+    // Enregistre un nouvel exercice
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration_inhale' => 'required|integer|min:1',
+            'duration_hold' => 'required|integer|min:0',
+            'duration_exhale' => 'required|integer|min:1',
+        ]);
+
+        Exercise::create($data);
+        return redirect()->route('admin.exercises.index')->with('success', 'Exercice créé !');
+    }
+
+    // Affiche le formulaire d'édition
+    public function edit(Exercise $exercise)
+    {
+        return view('admin.exercises.form', compact('exercise'));
+    }
+
+    // Met à jour l'exercice
+    public function update(Request $request, Exercise $exercise)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration_inhale' => 'required|integer|min:1',
+            'duration_hold' => 'required|integer|min:0',
+            'duration_exhale' => 'required|integer|min:1',
+        ]);
+
+        $exercise->update($data);
+        return redirect()->route('admin.exercises.index')->with('success', 'Exercice modifié !');
+    }
+
+    // Supprime l'exercice
+    public function destroy(Exercise $exercise)
+    {
+        $exercise->delete();
+        return redirect()->route('admin.exercises.index')->with('success', 'Exercice supprimé !');
+    }
+}
