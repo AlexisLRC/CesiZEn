@@ -24,6 +24,9 @@ Route::get('/respiration/{id}', [CesiZenController::class, 'respiration'])->name
 // Page publique pour voir les exercices
 Route::get('/exercices', [CesiZenController::class, 'publicExercises'])->name('public.exercises');
 
+// Page pour lire les articles/informations
+Route::get('/informations', [CesiZenController::class, 'informations'])->name('informations');
+
 // Routes protégées (Il faut être connecté)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

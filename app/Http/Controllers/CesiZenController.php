@@ -39,6 +39,16 @@ class CesiZenController extends Controller
         return view('public-exercises', compact('exercises'));
     }
 
+    // Affiche les pages informatives (Stress, Détente, etc.)
+    public function informations()
+    {
+        // On récupère toutes les pages depuis la base de données
+        // (Assure-toi que ton modèle s'appelle bien "Page")
+        $pages = \App\Models\Page::all(); 
+        
+        return view('informations', compact('pages'));
+    }
+
     // Affiche le formulaire pour l'exercice perso
     public function editPersonal()
     {
