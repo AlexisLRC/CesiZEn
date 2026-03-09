@@ -21,8 +21,9 @@ class CesiZenController extends Controller
     }
 
     // Affiche l'outil de respiration
-    public function respiration($id) {
-        $exercise = Exercise::findOrFail($id);
+    public function respiration($id)
+    {
+        $exercise = \App\Models\Exercise::findOrFail($id);
         return view('respiration', compact('exercise'));
     }
     
@@ -42,9 +43,8 @@ class CesiZenController extends Controller
     // Affiche les pages informatives (Stress, Détente, etc.)
     public function informations()
     {
-        // On récupère toutes les pages depuis la base de données
-        // (Assure-toi que ton modèle s'appelle bien "Page")
-        $pages = \App\Models\Page::all(); 
+        // On ne récupère que les pages publiées
+        $pages = Page::where('is_published', true)->get(); 
         
         return view('informations', compact('pages'));
     }

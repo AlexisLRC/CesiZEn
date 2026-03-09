@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CesiZenController; // <--- VÉRIFIE QUE CETTE LIGNE EST LÀ
+use App\Http\Controllers\CesiZenController;
 use App\Http\Controllers\AdminExerciseController;
+use App\Http\Controllers\AdminPageController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -49,5 +50,6 @@ Route::middleware(['auth', 'admin']) // <--- 'admin' est une string, donc plus d
         
         // Ta route existante :
         Route::resource('exercises', AdminExerciseController::class);
+        Route::resource('pages', AdminPageController::class);
 });
 require __DIR__.'/auth.php';

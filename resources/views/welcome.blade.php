@@ -8,9 +8,9 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="antialiased bg-gray-50 text-cesi-dark">
+    <body class="antialiased bg-gray-50 text-cesi-dark bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
         
-        <div class="relative flex justify-between items-center p-6 bg-white shadow-md">
+        <div class="relative flex justify-between items-center p-6 bg-white/90 shadow-md backdrop-blur-sm">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('logo.png') }}" alt="Logo" class="h-12">
                 <span class="text-2xl font-bold text-cesi-green tracking-wide">CESI<span class="text-cesi-yellow">ZEN</span></span>

@@ -34,11 +34,10 @@
             <div class="space-y-12">
                 @forelse($pages as $page)
                     <div class="bg-white p-10 rounded-3xl shadow-lg border-l-8 border-cesi-yellow">
-                        <h3 class="text-3xl font-bold text-gray-800 mb-6">{{ $page->title ?? $page->name ?? 'Article' }}</h3>
-                         <h3 class="text-3xl font-bold text-gray-800 mb-6">{{ $page->slug ?? $page->name ?? 'Article' }}</h3>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-6">{{ $page->title }}</h3>
                         
                         <div class="prose max-w-none text-gray-600 text-lg leading-relaxed">
-                            {{ $page->content }}
+                            {!! nl2br(e($page->content)) !!}
                         </div>
                     </div>
                 @empty

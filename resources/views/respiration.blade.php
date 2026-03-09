@@ -1,25 +1,25 @@
 <x-app-layout>
     <x-slot name="header">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                @auth
-                    <a href="{{ route('dashboard') }}" class="text-gray-400 hover:text-gray-600 hover:underline">Tableau de bord</a>
-                @else
-                    <a href="{{ route('public.exercises') }}" class="text-gray-400 hover:text-gray-600 hover:underline">Exercices libres</a>
-                @endauth
-                <span class="mx-2">/</span>
-                {{ $exercise->name }}
-            </h2>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            @auth
+                <a href="{{ route('dashboard') }}" class="text-gray-400 hover:text-gray-600 hover:underline">Tableau de bord</a>
+            @else
+                <a href="{{ route('public.exercises') }}" class="text-gray-400 hover:text-gray-600 hover:underline">Exercices libres</a>
+            @endauth
+            <span class="mx-2">/</span>
+            {{ $exercise->name }}
+        </h2>
     </x-slot>
 
     <div class="py-12 flex flex-col items-center justify-center min-h-[80vh]" 
-         x-data="breathLogic({{ $exercise->duration_inhale }}, {{ $exercise->duration_hold }}, {{ $exercise->duration_exhale }})">
+         x-data="respirationApp({{ $exercise->duration_inhale }}, {{ $exercise->duration_hold }}, {{ $exercise->duration_exhale }})">
         
         <div class="text-center mb-10">
             <h1 class="text-4xl font-bold text-cesi-green mb-2" x-text="instruction">Prêt ?</h1>
             <p class="text-gray-500">Suivez le rythme du cercle</p>
         </div>
 
-        <div class="relative flex items-center justify-center w-96 h-96">
+        <div class="relative flex items-center justify-center w-96 h-96 transition-opacity duration-1000" :class="{'opacity-50': !running}">
             <div class="absolute w-64 h-64 bg-green-100 rounded-full animate-pulse"></div>
             
             <div 
@@ -31,69 +31,124 @@
             </div>
         </div>
 
-        <div class="mt-12 flex gap-4">
-            <button 
-                @click="start()" 
-                x-show="!running"
-                class="px-8 py-4 bg-cesi-green text-white text-xl font-bold rounded-xl shadow-lg hover:bg-green-700 transition transform hover:scale-105"
-            >
-                ▶ Commencer
-            </button>
+        <div class="max-w-3xl mx-auto bg-white p-8 mt-12 rounded-xl shadow-lg text-center w-full">
+    
+            <div class="mb-8 flex justify-center items-center gap-4">
+                <label class="text-xl font-bold text-gray-700">Durée de la séance :</label>
+                
+                @auth
+                    <input type="number" x-model="sessionMinutes" :disabled="running" min="1" max="120" class="w-24 text-2xl border-2 border-cesi-green rounded-lg text-center font-bold focus:ring-cesi-green focus:border-cesi-green disabled:bg-gray-100 disabled:text-gray-400">
+                    <span class="text-gray-600 font-bold text-lg">minutes</span>
+                @else
+                    <input type="number" x-model="sessionMinutes" disabled class="w-24 text-2xl border-gray-300 bg-gray-100 rounded-lg text-center font-bold text-gray-500 cursor-not-allowed">
+                    <span class="text-gray-500 font-bold text-lg">minutes <br><span class="text-sm text-gray-400">(Connexion requise)</span></span>
+                @endauth
+            </div>
 
-            <button 
-                @click="stop()" 
-                x-show="running"
-                class="px-8 py-4 bg-white border-2 border-red-400 text-red-500 text-xl font-bold rounded-xl hover:bg-red-50 transition"
-            >
-                ⏹ Arrêter
-            </button>
+            <div x-show="running" class="text-6xl font-extrabold text-cesi-green mb-8" x-text="formattedTime"></div>
+
+            <div class="flex justify-center gap-4">
+                <button x-show="!running" @click="startSession()" class="px-8 py-4 bg-cesi-green text-white font-bold text-xl rounded-xl shadow-lg hover:bg-green-700 transition transform hover:scale-105">
+                    ▶ Démarrer la séance
+                </button>
+
+                <button x-show="running" @click="stopSession(false)" class="px-8 py-4 bg-red-500 text-white font-bold text-xl rounded-xl shadow-lg hover:bg-red-600 transition">
+                    ⏹ Arrêter
+                </button>
+            </div>
         </div>
-
     </div>
 
     <script>
-        function breathLogic(inhale, hold, exhale) {
-            return {
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('respirationApp', (inhale, hold, exhale) => ({
+                // États de l'animation
                 running: false,
                 instruction: 'Prêt ?',
-                size: 150, // Taille de départ
+                size: 150,
                 transitionTime: 0.5,
                 timer: 0,
-                interval: null,
+                currentTimeout: null,
                 countdownParams: null,
 
-                start() {
-                    if(this.running) return;
-                    this.running = true;
-                    this.cycle();
+                // États de la séance globale (le chronomètre)
+                sessionMinutes: 5,
+                sessionSecondsRemaining: 0,
+                sessionInterval: null,
+
+                // Calcule automatiquement l'affichage du temps (ex: 04:59)
+                get formattedTime() {
+                    let m = Math.floor(this.sessionSecondsRemaining / 60);
+                    let s = this.sessionSecondsRemaining % 60;
+                    return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
                 },
 
-                stop() {
+                // DÉMARRER LA SÉANCE
+                startSession() {
+                    if (this.running) return;
+
+                    // Sécuriser l'entrée de la durée
+                    let mins = parseInt(this.sessionMinutes);
+                    if (isNaN(mins) || mins < 1) mins = 5;
+                    this.sessionMinutes = mins;
+                    this.sessionSecondsRemaining = mins * 60;
+
+                    this.running = true;
+
+                    // 1. Lancer le cercle de respiration
+                    this.cycle();
+
+                    // 2. Lancer le chronomètre global
+                    this.sessionInterval = setInterval(() => {
+                        this.sessionSecondsRemaining--;
+                        
+                        // Si le temps est écoulé
+                        if (this.sessionSecondsRemaining <= 0) {
+                            this.stopSession(true);
+                        }
+                    }, 1000);
+                },
+
+                // ARRÊTER LA SÉANCE
+                stopSession(completedNaturally) {
                     this.running = false;
                     this.instruction = 'Exercice terminé';
                     this.size = 150;
                     this.transitionTime = 0.5;
                     this.timer = 0;
-                    clearTimeout(this.interval);
+
+                    // Tout arrêter
+                    clearTimeout(this.currentTimeout);
                     clearInterval(this.countdownParams);
+                    clearInterval(this.sessionInterval);
+
+                    if (completedNaturally) {
+                        // Un petit délai pour laisser l'interface s'actualiser à 00:00 avant l'alerte
+                        setTimeout(() => {
+                            alert("✨ Séance terminée ! Prenez un instant pour ressentir les bienfaits.");
+                        }, 100);
+                    }
                 },
 
+                // LA LOGIQUE DE RESPIRATION
                 cycle() {
                     if(!this.running) return;
 
                     // 1. INSPIRATION
                     this.instruction = 'Inspirez...';
                     this.transitionTime = inhale;
-                    this.size = 350; // Taille max
+                    this.size = 350;
                     this.startTimer(inhale);
                     
-                    this.interval = setTimeout(() => {
-                        // 2. APNÉE (Optionnelle)
+                    this.currentTimeout = setTimeout(() => {
+                        if(!this.running) return;
+
+                        // 2. APNÉE
                         if (hold > 0) {
                             this.instruction = 'Bloquez...';
-                            this.transitionTime = 0; // Pas de changement de taille
+                            this.transitionTime = 0;
                             this.startTimer(hold);
-                            setTimeout(() => {
+                            this.currentTimeout = setTimeout(() => {
                                 this.exhalePhase(exhale);
                             }, hold * 1000);
                         } else {
@@ -104,14 +159,15 @@
 
                 exhalePhase(duration) {
                     if(!this.running) return;
+                    
                     // 3. EXPIRATION
                     this.instruction = 'Expirez...';
                     this.transitionTime = duration;
-                    this.size = 150; // Retour taille min
+                    this.size = 150;
                     this.startTimer(duration);
 
-                    setTimeout(() => {
-                        this.cycle(); // Boucle infinie
+                    this.currentTimeout = setTimeout(() => {
+                        this.cycle();
                     }, duration * 1000);
                 },
 
@@ -122,7 +178,7 @@
                         if(this.timer > 0) this.timer--;
                     }, 1000);
                 }
-            }
-        }
+            }));
+        });
     </script>
 </x-app-layout>
