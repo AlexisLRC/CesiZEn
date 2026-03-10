@@ -14,7 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // C'EST ICI QU'ON AJOUTE L'ALIAS
         $middleware->alias([
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            'not_blocked' => \App\Http\Middleware\EnsureUserIsNotBlocked::class,
         ]);
+
+        $middleware->appendToGroup('web', \App\Http\Middleware\EnsureUserIsNotBlocked::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -18,38 +18,39 @@ class User extends Authenticatable
      * @var list<string>
      */
 protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'avatar',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+    'avatar',
+    'is_blocked',
+];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+/**
+ * The attributes that should be hidden for serialization.
+ *
+ * @var list<string>
+ */
+protected $hidden = [
+    'password',
+    'remember_token',
+];
 
-    public function pages()
-    {
-        return $this->hasMany(Page::class);
-    }
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+public function pages()
+{
+    return $this->hasMany(Page::class);
 }
+
+/**
+ * Get the attributes that should be cast.
+ *
+ * @return array<string, string>
+ */
+protected function casts(): array
+{
+    return [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_blocked' => 'boolean',
+    ];
+}}

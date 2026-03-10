@@ -40,6 +40,9 @@
                                         <x-dropdown-link :href="route('admin.pages.index')">
                                             Gérer les Pages d'Info
                                         </x-dropdown-link>
+                                        <x-dropdown-link :href="route('admin.users.index')">
+                                            Gérer les Utilisateurs
+                                        </x-dropdown-link>
                                     </x-slot>
                                 </x-dropdown>
                             </div>
@@ -129,6 +132,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.pages.index')" :active="request()->routeIs('admin.pages.*')" class="text-white">
                         Gérer les Pages d'Info
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" class="text-white">
+                        Gérer les Utilisateurs
                     </x-responsive-nav-link>
                 </div>
             @endif
