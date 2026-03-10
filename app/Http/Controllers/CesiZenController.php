@@ -40,13 +40,39 @@ class CesiZenController extends Controller
         return view('public-exercises', compact('exercises'));
     }
 
-    // Affiche les pages informatives (Stress, Détente, etc.)
+    // Affiche la liste des pages d'info
     public function informations()
     {
-        // On ne récupère que les pages publiées
-        $pages = Page::where('is_published', true)->get(); 
+        // On ne récupère que les pages publiées, avec l'auteur
+        $pages = Page::where('is_published', true)->with('author')->latest()->get(); 
         
         return view('informations', compact('pages'));
+    }
+
+    // Formulaire de proposition d'article
+    public function createArticle()
+    {
+        return view('admin.pages.form', [
+            'page' => new Page(),
+            'isProposal' => true
+        ]);
+    }
+
+    // Enregistre la proposition d'article
+    public function storeArticle(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $page = new Page($validated);
+        $page->slug = \Illuminate\Support\Str::slug($validated['title']) . '-' . uniqid();
+        $page->is_published = false; // Toujours non publié par défaut pour les utilisateurs
+        $page->user_id = auth()->id();
+        $page->save();
+
+        return redirect()->route('informations')->with('status', 'Votre article a été soumis avec succès et sera relu par un administrateur avant publication.');
     }
 
     // Affiche le formulaire pour l'exercice perso

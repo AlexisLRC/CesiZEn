@@ -35,6 +35,11 @@ protected $fillable = [
         'remember_token',
     ];
 
+    public function pages()
+    {
+        return $this->hasMany(Page::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

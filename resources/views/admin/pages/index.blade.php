@@ -21,23 +21,27 @@
                         <thead class="bg-gray-100 text-gray-800 uppercase font-bold">
                             <tr>
                                 <th class="px-6 py-4 border-b">Titre</th>
-                                <th class="px-6 py-4 border-b">Slug</th>
+                                <th class="px-6 py-4 border-b">Auteur</th>
                                 <th class="px-6 py-4 border-b text-center">Statut</th>
                                 <th class="px-6 py-4 border-b text-center">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach($pages as $page)
-                            <tr class="border-b hover:bg-green-50 transition bg-white">
-                                <td class="px-6 py-4 font-bold text-gray-800 text-lg">{{ $page->title }}</td>
-                                <td class="px-6 py-4 text-gray-500">{{ $page->slug }}</td>
-                                <td class="px-6 py-4 text-center">
-                                    @if($page->is_published)
-                                        <span class="bg-green-100 text-green-800 py-1 px-3 rounded-full text-xs font-bold">Publiée</span>
-                                    @else
-                                        <span class="bg-gray-200 text-gray-800 py-1 px-3 rounded-full text-xs font-bold">Brouillon</span>
-                                    @endif
-                                </td>
+                                <tbody>
+                                @foreach($pages as $page)
+                                <tr class="border-b hover:bg-green-50 transition bg-white">
+                                    <td class="px-6 py-4 font-bold text-gray-800 text-lg">{{ $page->title }}</td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-gray-600 italic">
+                                            {{ $page->author ? $page->author->name : 'Administrateur' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        @if($page->is_published)
+                                            <span class="bg-green-100 text-green-800 py-1 px-3 rounded-full text-xs font-bold ring-1 ring-green-600/20">Publiée</span>
+                                        @else
+                                            <span class="bg-yellow-100 text-yellow-800 py-1 px-3 rounded-full text-xs font-bold ring-1 ring-yellow-600/20">En attente / Brouillon</span>
+                                        @endif
+                                    </td>
                                 <td class="px-6 py-4 flex justify-center gap-6">
                                     <a href="{{ route('admin.pages.edit', $page) }}" class="text-blue-500 hover:text-blue-700 font-bold hover:underline">Modifier</a>
                                     <form action="{{ route('admin.pages.destroy', $page) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette page ?')">

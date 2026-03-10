@@ -10,13 +10,13 @@ class AdminPageController extends Controller
 {
     public function index()
     {
-        $pages = Page::all();
+        $pages = Page::with('author')->latest()->get();
         return view('admin.pages.index', compact('pages'));
     }
 
     public function create()
     {
-        return view('admin.pages.form');
+        return view('admin.pages.form', ['page' => new Page()]);
     }
 
     public function store(Request $request)
@@ -24,11 +24,11 @@ class AdminPageController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'is_published' => 'boolean',
         ]);
 
-        $data['slug'] = Str::slug($data['title']);
+        $data['slug'] = Str::slug($data['title']) . '-' . uniqid();
         $data['is_published'] = $request->has('is_published');
+        $data['user_id'] = auth()->id();
 
         Page::create($data);
         return redirect()->route('admin.pages.index')->with('success', 'Page créée !');
@@ -44,10 +44,9 @@ class AdminPageController extends Controller
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'is_published' => 'boolean',
         ]);
 
-        $data['slug'] = Str::slug($data['title']);
+        $data['slug'] = Str::slug($data['title']) . '-' . ($page->id);
         $data['is_published'] = $request->has('is_published');
 
         $page->update($data);

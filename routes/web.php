@@ -27,12 +27,20 @@ Route::get('/exercices', [CesiZenController::class, 'publicExercises'])->name('p
 
 // Page pour lire les articles/informations
 Route::get('/informations', [CesiZenController::class, 'informations'])->name('informations');
+Route::get('/page/{slug}', function($slug) {
+    $page = \App\Models\Page::where('slug', $slug)->where('is_published', true)->with('author')->firstOrFail();
+    return view('page', compact('page'));
+})->name('page.show');
 
 // Routes protégées (Il faut être connecté)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // NOUVELLES ROUTES : Articles proposés par les utilisateurs
+    Route::get('/proposer-un-article', [CesiZenController::class, 'createArticle'])->name('article.create');
+    Route::post('/proposer-un-article', [CesiZenController::class, 'storeArticle'])->name('article.store');
     
     // NOUVELLES ROUTES : Créer/Modifier son exercice perso
     Route::get('/mon-exercice', [CesiZenController::class, 'editPersonal'])->name('personal.edit');
