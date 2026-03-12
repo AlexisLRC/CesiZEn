@@ -41,6 +41,10 @@ public function pages()
     return $this->hasMany(Page::class);
 }
 
+public function sessions()
+{
+    return $this->hasMany(ExerciseSession::class);
+}
 /**
  * Get the attributes that should be cast.
  *

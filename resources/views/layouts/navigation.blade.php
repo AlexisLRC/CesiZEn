@@ -20,6 +20,10 @@
                            class="inline-flex items-center px-1 pt-1 border-b-2 text-xl font-bold leading-5 transition duration-150 ease-in-out {{ request()->routeIs('informations') ? 'border-white text-white' : 'border-transparent text-green-100 hover:text-white hover:border-gray-300' }}">
                             {{ __('Blog / Info') }}
                         </a>
+                        <a href="{{ route('stats') }}" 
+                           class="inline-flex items-center px-1 pt-1 border-b-2 text-xl font-bold leading-5 transition duration-150 ease-in-out {{ request()->routeIs('stats') ? 'border-white text-white' : 'border-transparent text-green-100 hover:text-white hover:border-gray-300' }}">
+                            {{ __('Statistiques') }}
+                        </a>
                         @if(Auth::user()->role === 'admin')
                             <div class="hidden sm:flex sm:items-center sm:ms-6">
                                 <x-dropdown align="right" width="48">

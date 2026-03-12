@@ -182,6 +182,9 @@
                 },
 
                 stopSession(completedNaturally) {
+                    // Calcul du temps passé
+                    let durationSeconds = (this.sessionMinutes * 60) - this.sessionSecondsRemaining;
+                    
                     this.running = false;
                     this.instruction = 'Séance terminée';
                     this.size = this.baseSize;
@@ -190,6 +193,24 @@
                     clearTimeout(this.currentTimeout);
                     clearInterval(this.countdownParams);
                     clearInterval(this.sessionInterval);
+
+                    // Envoi des statistiques au serveur (si connecté)
+                    @auth
+                    fetch('{{ route('session.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            exercise_id: {{ $exercise->id }},
+                            duration_seconds: durationSeconds,
+                            target_duration_seconds: this.sessionMinutes * 60,
+                            is_completed: completedNaturally
+                        })
+                    });
+                    @endauth
+
                     if (completedNaturally) {
                         setTimeout(() => { alert("✨ Séance terminée ! Prenez un instant pour ressentir les bienfaits."); }, 100);
                     }

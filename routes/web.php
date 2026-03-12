@@ -45,6 +45,10 @@ Route::middleware('auth')->group(function () {
     // NOUVELLES ROUTES : Créer/Modifier son exercice perso
     Route::get('/mon-exercice', [CesiZenController::class, 'editPersonal'])->name('personal.edit');
     Route::post('/mon-exercice', [CesiZenController::class, 'storePersonal'])->name('personal.store');
+
+    // STATISTIQUES
+    Route::get('/statistiques', [CesiZenController::class, 'stats'])->name('stats');
+    Route::post('/session/store', [CesiZenController::class, 'storeSession'])->name('session.store');
 });
 
 // Groupe Admin : Seul l'utilisateur avec role='admin' peut entrer ici
