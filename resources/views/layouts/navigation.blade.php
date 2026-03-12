@@ -13,8 +13,8 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @auth
                         <a href="{{ route('dashboard') }}" 
-                           class="inline-flex items-center px-1 pt-1 border-b-2 text-xl font-bold leading-5 transition duration-150 ease-in-out {{ request()->routeIs('dashboard') ? 'border-white text-white' : 'border-transparent text-green-100 hover:text-white hover:border-gray-300' }}">
-                            {{ __('Tableau de bord') }}
+                           class="inline-flex items-center px-1 pt-1 border-b-2 text-xl font-bold leading-5 transition duration-150 ease-in-out {{ (request()->routeIs('dashboard') || request()->routeIs('public.exercises')) ? 'border-white text-white' : 'border-transparent text-green-100 hover:text-white hover:border-gray-300' }}">
+                            {{ __('Exercices') }}
                         </a>
                         <a href="{{ route('informations') }}" 
                            class="inline-flex items-center px-1 pt-1 border-b-2 text-xl font-bold leading-5 transition duration-150 ease-in-out {{ request()->routeIs('informations') ? 'border-white text-white' : 'border-transparent text-green-100 hover:text-white hover:border-gray-300' }}">
@@ -120,8 +120,8 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-green-700">
         @auth
             <div class="pt-2 pb-3 space-y-1">
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white">
-                    {{ __('Tableau de bord') }}
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard') || request()->routeIs('public.exercises')" class="text-white">
+                    {{ __('Exercices') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('informations')" :active="request()->routeIs('informations')" class="text-white">
                     {{ __('Blog / Info') }}

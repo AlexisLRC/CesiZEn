@@ -15,9 +15,7 @@ Route::get('/a-propos', function () {
 // Dashboard (Tableau de bord)
 Route::get('/', [CesiZenController::class, 'index'])->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [CesiZenController::class, 'publicExercises'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route PUBLIQUE (accessible sans compte)
 Route::get('/respiration/{id}', [CesiZenController::class, 'respiration'])->name('respiration.show');

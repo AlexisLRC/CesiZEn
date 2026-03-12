@@ -30,13 +30,9 @@ class CesiZenController extends Controller
         return view('respiration', compact('exercise'));
     }
     
-    // Affiche la liste des exercices pour les visiteurs (ou redirige si connecté)
+    // Affiche la liste des exercices pour tous
     public function publicExercises()
     {
-        if (auth()->check()) {
-            return redirect()->route('dashboard');
-        }
-
         $exercises = Exercise::whereNull('user_id')->orderBy('order', 'asc')->get();
         return view('public-exercises', compact('exercises'));
     }
