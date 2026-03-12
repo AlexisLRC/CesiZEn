@@ -82,17 +82,27 @@
                 <!-- Contrôles -->
                 <div class="mt-20 w-full max-w-md">
                     <div x-show="!running" class="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-50 space-y-6">
-                        <div>
-                            <label class="block text-center text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Durée de la séance</label>
-                            <div class="flex items-center justify-center gap-6">
-                                <button @click="if(sessionMinutes > 1) sessionMinutes--" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition">-</button>
-                                <div class="text-center">
-                                    <span class="text-5xl font-black text-slate-800" x-text="sessionMinutes"></span>
-                                    <span class="block text-xs font-bold text-slate-400 uppercase tracking-tighter">minutes</span>
+                        @auth
+                            <div>
+                                <label class="block text-center text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Durée de la séance</label>
+                                <div class="flex items-center justify-center gap-6">
+                                    <button @click="if(sessionMinutes > 1) sessionMinutes--" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition">-</button>
+                                    <div class="text-center">
+                                        <span class="text-5xl font-black text-slate-800" x-text="sessionMinutes"></span>
+                                        <span class="block text-xs font-bold text-slate-400 uppercase tracking-tighter">minutes</span>
+                                    </div>
+                                    <button @click="sessionMinutes++" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition">+</button>
                                 </div>
-                                <button @click="sessionMinutes++" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition">+</button>
                             </div>
-                        </div>
+                        @else
+                            <div class="text-center py-4">
+                                <p class="text-slate-500 font-medium mb-2">Séance de respiration</p>
+                                <div class="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full text-slate-700 font-bold">
+                                    <svg class="w-5 h-5 text-cesi-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    5 minutes
+                                </div>
+                            </div>
+                        @endauth
 
                         <button @click="startSession()" class="w-full bg-slate-900 text-white font-extrabold py-5 rounded-3xl shadow-2xl shadow-slate-900/20 hover:bg-cesi-green transition-all duration-300 transform hover:scale-[1.02] active:scale-95 text-xl">
                             Démarrer la séance

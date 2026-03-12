@@ -64,7 +64,7 @@ class AdminPageController extends Controller
         $data['user_id'] = auth()->id();
 
         Page::create($data);
-        return redirect()->route('admin.pages.index')->with('success', 'Page créée !');
+        return redirect()->route('admin.pages.index')->with('success', 'Votre article a été créé avec succès.');
     }
 
     public function edit(Page $page)
@@ -84,12 +84,12 @@ class AdminPageController extends Controller
         $data['is_published'] = $request->has('is_published');
 
         $page->update($data);
-        return redirect()->route('admin.pages.index')->with('success', 'Page modifiée !');
+        return redirect()->route('admin.pages.index')->with('success', 'Votre article a été mis à jour avec succès.');
     }
 
     public function destroy(Page $page)
     {
         $page->delete();
-        return redirect()->route('admin.pages.index')->with('success', 'Page supprimée !');
+        return redirect()->route('admin.pages.index')->with('success', 'L\'article a été supprimé avec succès.');
     }
 }

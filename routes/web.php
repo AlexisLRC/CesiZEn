@@ -65,6 +65,7 @@ Route::middleware(['auth', 'admin']) // <--- 'admin' est une string, donc plus d
         // Gestion des utilisateurs
         Route::get('users', [\App\Http\Controllers\AdminUserController::class, 'index'])->name('users.index');
         Route::patch('users/{user}/toggle-block', [\App\Http\Controllers\AdminUserController::class, 'toggleBlock'])->name('users.toggle-block');
+        Route::patch('users/{user}/update-role', [\App\Http\Controllers\AdminUserController::class, 'updateRole'])->name('users.update-role');
         Route::delete('users/{user}', [\App\Http\Controllers\AdminUserController::class, 'destroy'])->name('users.destroy');
 });
 require __DIR__.'/auth.php';

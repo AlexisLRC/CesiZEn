@@ -12,12 +12,6 @@
                 <h3 class="text-2xl font-bold text-cesi-green">Liste des utilisateurs</h3>
             </div>
 
-            @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <!-- Filtres -->
             <div class="bg-white p-6 rounded-lg shadow-md mb-6 border-l-4 border-cesi-green">
                 <form action="{{ route('admin.users.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
@@ -113,9 +107,22 @@
                                 <td class="px-6 py-4 font-bold text-gray-800">{{ $user->name }}</td>
                                 <td class="px-6 py-4">{{ $user->email }}</td>
                                 <td class="px-6 py-4">
-                                    <span class="px-2 py-1 rounded text-xs font-bold {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
-                                        {{ strtoupper($user->role) }}
-                                    </span>
+                                    @if($user->id === auth()->id())
+                                        <span class="px-2 py-1 rounded text-xs font-bold bg-purple-100 text-purple-800">
+                                            {{ strtoupper($user->role) }}
+                                        </span>
+                                    @else
+                                        <form action="{{ route('admin.users.update-role', $user) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <select name="role" onchange="this.form.submit()" 
+                                                class="text-xs font-bold rounded-lg border-transparent focus:ring-0 focus:border-transparent p-1 pr-8 transition cursor-pointer uppercase 
+                                                {{ $user->role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800' }}">
+                                                <option value="user" {{ $user->role === 'user' ? 'selected' : '' }} class="bg-white text-blue-800">USER</option>
+                                                <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }} class="bg-white text-red-800">ADMIN</option>
+                                            </select>
+                                        </form>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($user->is_blocked)
@@ -124,19 +131,27 @@
                                         <span class="px-2 py-1 rounded text-xs font-bold bg-green-100 text-green-800">ACTIF</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 flex justify-center gap-4">
-                                    <form action="{{ route('admin.users.toggle-block', $user) }}" method="POST">
+                                <td class="px-6 py-4 flex justify-center items-center gap-4">
+                                    <!-- Bloquer/Débloquer -->
+                                    <form action="{{ route('admin.users.toggle-block', $user) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="font-bold hover:underline {{ $user->is_blocked ? 'text-green-600 hover:text-green-800' : 'text-orange-600 hover:text-orange-800' }}">
-                                            {{ $user->is_blocked ? 'Débloquer' : 'Bloquer' }}
+                                        <button type="submit" title="{{ $user->is_blocked ? 'Débloquer' : 'Bloquer' }}" class="p-2 rounded-lg hover:bg-gray-100 transition {{ $user->is_blocked ? 'text-green-600' : 'text-orange-600' }}">
+                                            @if($user->is_blocked)
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            @else
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                            @endif
                                         </button>
                                     </form>
 
-                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')">
+                                    <!-- Supprimer -->
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:text-red-700 font-bold hover:underline">Supprimer</button>
+                                        <button type="submit" title="Supprimer" class="p-2 rounded-lg hover:bg-red-50 text-red-500 transition">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>

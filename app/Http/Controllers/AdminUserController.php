@@ -63,6 +63,26 @@ class AdminUserController extends Controller
     }
 
     /**
+     * Mettre à jour le rôle d'un utilisateur.
+     */
+    public function updateRole(Request $request, User $user)
+    {
+        // On ne permet pas à un admin de changer son propre rôle
+        if ($user->id === auth()->id()) {
+            return back()->with('error', "Vous ne pouvez pas changer votre propre rôle.");
+        }
+
+        $validated = $request->validate([
+            'role' => 'required|in:admin,user',
+        ]);
+
+        $user->role = $validated['role'];
+        $user->save();
+
+        return back()->with('success', "Le rôle de {$user->name} a été mis à jour en " . strtoupper($user->role) . ".");
+    }
+
+    /**
      * Supprimer un utilisateur.
      */
     public function destroy(User $user)

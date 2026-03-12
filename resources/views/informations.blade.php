@@ -50,11 +50,6 @@
     }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            @if (session('status'))
-                <div class="mb-8 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded-r-xl shadow-sm">
-                    {{ session('status') }}
-                </div>
-            @endif
 
             <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
                 <div class="text-center md:text-left">

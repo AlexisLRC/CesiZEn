@@ -33,7 +33,7 @@ class AdminExerciseController extends Controller
         ]);
 
         Exercise::create($data);
-        return redirect()->route('admin.exercises.index')->with('success', 'Exercice créé !');
+        return redirect()->route('admin.exercises.index')->with('success', 'L\'exercice a été créé avec succès.');
     }
 
     // Affiche le formulaire d'édition
@@ -54,14 +54,14 @@ class AdminExerciseController extends Controller
         ]);
 
         $exercise->update($data);
-        return redirect()->route('admin.exercises.index')->with('success', 'Exercice modifié !');
+        return redirect()->route('admin.exercises.index')->with('success', 'L\'exercice a été mis à jour avec succès.');
     }
 
     // Supprime l'exercice
     public function destroy(Exercise $exercise)
     {
         $exercise->delete();
-        return redirect()->route('admin.exercises.index')->with('success', 'Exercice supprimé !');
+        return redirect()->route('admin.exercises.index')->with('success', 'L\'exercice a été supprimé avec succès.');
     }
 
     // Sauvegarde le nouvel ordre après un drag & drop
