@@ -81,9 +81,9 @@ class CesiZenController extends Controller
     public function storePersonal(Request $request)
     {
         $data = $request->validate([
-            'duration_inhale' => 'required|integer|min:1',
-            'duration_hold' => 'required|integer|min:0',
-            'duration_exhale' => 'required|integer|min:1',
+            'duration_inhale' => 'required|integer|min:1|max:60',
+            'duration_hold' => 'required|integer|min:0|max:60',
+            'duration_exhale' => 'required|integer|min:1|max:60',
         ]);
 
         Exercise::updateOrCreate(

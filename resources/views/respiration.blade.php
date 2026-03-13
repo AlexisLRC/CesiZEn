@@ -91,7 +91,7 @@
                                         <span class="text-5xl font-black text-slate-800" x-text="sessionMinutes"></span>
                                         <span class="block text-xs font-bold text-slate-400 uppercase tracking-tighter">minutes</span>
                                     </div>
-                                    <button @click="sessionMinutes++" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition">+</button>
+                                    <button @click="if(sessionMinutes < 60) sessionMinutes++" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:bg-slate-100 transition">+</button>
                                 </div>
                             </div>
                         @else
@@ -179,6 +179,7 @@
                     if (this.running) return;
                     let mins = parseInt(this.sessionMinutes);
                     if (isNaN(mins) || mins < 1) mins = 5;
+                    if (mins > 60) mins = 60;
                     this.sessionMinutes = mins;
                     this.sessionSecondsRemaining = mins * 60;
                     this.running = true;

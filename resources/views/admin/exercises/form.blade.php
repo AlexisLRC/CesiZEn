@@ -34,15 +34,15 @@
                         <div class="grid grid-cols-3 gap-6">
                             <div>
                                 <label class="block text-sm text-center text-blue-600 font-bold mb-2">Inspiration</label>
-                                <input type="number" name="duration_inhale" value="{{ old('duration_inhale', $exercise->duration_inhale ?? 5) }}" class="w-full border-gray-300 rounded-lg text-center shadow-sm" required>
+                                <input type="number" name="duration_inhale" value="{{ old('duration_inhale', $exercise->duration_inhale ?? 5) }}" class="w-full border-gray-300 rounded-lg text-center shadow-sm" min="1" max="60" required>
                             </div>
                             <div>
                                 <label class="block text-sm text-center text-gray-600 font-bold mb-2">Apnée (Pause)</label>
-                                <input type="number" name="duration_hold" value="{{ old('duration_hold', $exercise->duration_hold ?? 0) }}" class="w-full border-gray-300 rounded-lg text-center shadow-sm" required>
+                                <input type="number" name="duration_hold" value="{{ old('duration_hold', $exercise->duration_hold ?? 0) }}" class="w-full border-gray-300 rounded-lg text-center shadow-sm" min="0" max="60" required>
                             </div>
                             <div>
                                 <label class="block text-sm text-center text-green-600 font-bold mb-2">Expiration</label>
-                                <input type="number" name="duration_exhale" value="{{ old('duration_exhale', $exercise->duration_exhale ?? 5) }}" class="w-full border-gray-300 rounded-lg text-center shadow-sm" required>
+                                <input type="number" name="duration_exhale" value="{{ old('duration_exhale', $exercise->duration_exhale ?? 5) }}" class="w-full border-gray-300 rounded-lg text-center shadow-sm" min="1" max="60" required>
                             </div>
                         </div>
                     </div>

@@ -27,9 +27,9 @@ class AdminExerciseController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'duration_inhale' => 'required|integer|min:1',
-            'duration_hold' => 'required|integer|min:0',
-            'duration_exhale' => 'required|integer|min:1',
+            'duration_inhale' => 'required|integer|min:1|max:60',
+            'duration_hold' => 'required|integer|min:0|max:60',
+            'duration_exhale' => 'required|integer|min:1|max:60',
         ]);
 
         Exercise::create($data);
@@ -48,9 +48,9 @@ class AdminExerciseController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'duration_inhale' => 'required|integer|min:1',
-            'duration_hold' => 'required|integer|min:0',
-            'duration_exhale' => 'required|integer|min:1',
+            'duration_inhale' => 'required|integer|min:1|max:60',
+            'duration_hold' => 'required|integer|min:0|max:60',
+            'duration_exhale' => 'required|integer|min:1|max:60',
         ]);
 
         $exercise->update($data);
