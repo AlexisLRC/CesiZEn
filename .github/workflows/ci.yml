@@ -1,8 +1,11 @@
 name: CI CESIZEN Laravel
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Fait taire les warnings Node 20
 
 on:
   push:
-    branches: [main, develop, 'feature/*'] # <-- Ajout de la règle feature/*
+    branches: [main, develop, 'feature/*']
+
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches: [main, develop]
