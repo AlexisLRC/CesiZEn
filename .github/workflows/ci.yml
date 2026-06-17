@@ -1,0 +1,105 @@
+name: CI CESIZEN Laravel
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches: [main, develop]
+
+jobs:
+  # ----------------------------------------------------
+  # JOB 1 : QUALITÉ DU CODE (En parallèle)
+  # ----------------------------------------------------
+  quality:
+    name: Qualite (Pint + PHPStan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, pdo, pdo_sqlite
+          coverage: none
+      - uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+      - run: composer install --no-interaction --prefer-dist
+      
+      # Vérification du formatage avec Pint
+      - run: vendor/bin/pint --test
+      # Analyse statique du code avec PHPStan
+      - run: vendor/bin/phpstan analyse --memory-limit=256M
+
+  # ----------------------------------------------------
+  # JOB 2 : TESTS PHPUNIT AVEC MATRICE (En parallèle)
+  # ----------------------------------------------------
+  tests:
+    name: Tests PHPUnit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.3'] # Test sur deux versions de PHP
+      fail-fast: false # Si 8.2 plante, on veut quand même voir le résultat de 8.3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, xml, pdo, pdo_sqlite
+          coverage: xdebug # Obligatoire pour calculer la couverture
+      - uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.testing .env
+      - run: php artisan key:generate --env=testing
+      
+      # Lancement des tests avec une couverture minimale de 60%
+      - run: XDEBUG_MODE=coverage php artisan test --coverage --min=60 --env=testing
+      
+      # Sauvegarde du rapport de couverture
+      - uses: actions/upload-artifact@v4
+        if: always() # Toujours uploader, même si les tests échouent
+        with:
+          name: coverage-php-${{ matrix.php }}
+          path: coverage/
+          retention-days: 7
+
+  # ----------------------------------------------------
+  # JOB 3 : AUDIT DE SÉCURITÉ (En parallèle)
+  # ----------------------------------------------------
+  security:
+    name: Audit securite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+      # Vérification des failles de sécurité dans les dépendances
+      - run: composer audit
+
+  # ----------------------------------------------------
+  # JOB 4 : BUILD DES ASSETS (Séquentiel)
+  # ----------------------------------------------------
+  build-assets:
+    name: Build assets (Vite)
+    runs-on: ubuntu-latest
+    needs: [quality, tests, security] # Attend que les 3 jobs précédents réussissent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: composer install --no-interaction --prefer-dist
+      - run: npm ci && npm run build
