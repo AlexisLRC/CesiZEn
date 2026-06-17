@@ -2,7 +2,7 @@ name: CI CESIZEN Laravel
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, 'feature/*'] # <-- Ajout de la règle feature/*
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches: [main, develop]
