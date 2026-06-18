@@ -1,3 +1,5 @@
+[![CI Statut](https://github.com/alexislrc/cesizen/actions/workflows/ci.yml/badge.svg)](https://github.com/alexislrc/cesizen/actions/workflows/ci.yml) [![Dernière Release](https://img.shields.io/github/v/release/alexislrc/cesizen)](https://github.com/alexislrc/cesizen/releases) [![Licence](https://img.shields.io/github/license/alexislrc/cesizen)](https://github.com/alexislrc/cesizen/blob/main/LICENSE) [![Dernier Commit](https://img.shields.io/github/last-commit/alexislrc/cesizen)](https://github.com/alexislrc/cesizen/commits/main)
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
