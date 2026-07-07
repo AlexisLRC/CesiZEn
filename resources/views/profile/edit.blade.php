@@ -27,4 +27,14 @@
             </div>
         </div>
     </div>
+    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div class="max-w-xl text-center mx-auto">
+            <p class="text-sm text-gray-600">
+                {{ __('Besoin d\'aide ou une question ? Contactez-nous à l\'adresse suivante :') }}
+            </p>
+            <a href="mailto:CesizenAlr@gmail.com" class="text-lg font-bold text-indigo-600 hover:text-indigo-900 hover:underline transition ease-in-out duration-150">
+                 CesizenAlr@gmail.com
+            </a>
+        </div>
+    </div>
 </x-app-layout>
