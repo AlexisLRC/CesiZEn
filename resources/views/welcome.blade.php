@@ -49,7 +49,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full max-w-xs sm:max-w-none items-center justify-center">
-                <a href="{{ route('public.exercises') }}" class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-cesi-green text-white text-base sm:text-lg font-bold rounded-xl shadow-xl hover:scale-105 transition transform text-center">
+                <a href="{{ route('public.exercises') }}" style="background-color: #2563eb;" class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 text-white text-base sm:text-lg font-bold rounded-xl shadow-xl hover:scale-105 transition transform text-center">
                     Commencer maintenant
                 </a>
                 <a href="{{ route('informations') }}" class="w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-white text-cesi-green border-2 border-cesi-green text-base sm:text-lg font-bold rounded-xl hover:bg-green-50 transition text-center">
